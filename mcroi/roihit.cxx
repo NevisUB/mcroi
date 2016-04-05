@@ -9,7 +9,7 @@
 
 namespace larlite {
 
-  bool roihit::FindROI(storage_manager* storage,std::string producer) {
+  bool roihit::FindROI(storage_manager* storage,std::string producer, std::vector<double> &vtx) {
     
     auto event_h      = storage->get_data<event_hit>( producer );
     
@@ -68,16 +68,28 @@ namespace larlite {
 
 
     //Do the vertex
-    std::vector<double> vtx;
+    
+    vtx  = {-1,-1,-1};
     
     for( const auto& s : *event_shower ) {
       
       if ( s.MotherPdgCode() != 111 ) continue; // this parents particle was not pizero
 
-      vtx = { s.Start().X(),s.Start().Y(),s.Start().Z() };
-      
+      vtx  = {s.Start().X(), s.Start().Y(), s.Start().Z() };
+
       break; // found it, leave
       
+    }
+
+    if ( (vtx[0] == -1) && (vtx[1] == -1) && (vtx[2] == -1) ){
+      std::cout << "No Pi0!" << std::endl;
+      return false;
+    }
+
+    // if vertex out of FV -> return false
+    if ( (vtx[0] < 0) || (vtx[1] > 256) || (vtx[1] < -116) || (vtx[1] > 116) || (vtx[2] < 0) || (vtx[2]  > 1036) ){
+      std::cout << "Pi0 is out of FV" << std::endl;
+      return false;
     }
 
 

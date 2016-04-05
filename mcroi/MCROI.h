@@ -7,6 +7,8 @@
 #include "Analysis/ana_base.h"
 #include "DataFormat/PiZeroROI.h"
 #include "DataFormat/wire.h"
+#include "DataFormat/vertex.h"
+#include "DataFormat/event_ass.h"
 
 #include "roialgo.h"
 

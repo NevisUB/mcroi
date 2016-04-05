@@ -15,7 +15,7 @@ namespace larlite {
     /// Default destructor
     virtual ~roihit(){}
 
-    bool FindROI(storage_manager* storage,std::string producer);
+    bool FindROI(storage_manager* storage,std::string producer, std::vector<double> &vtx);
 
   private:
     

@@ -19,6 +19,8 @@ for x in xrange(len(sys.argv)-1):
 my_proc.set_io_mode(fmwk.storage_manager.kBOTH)
 
 my_proc.set_data_to_write(fmwk.data.kPiZeroROI,"mcroi")
+my_proc.set_data_to_write(fmwk.data.kVertex,"mcroi")
+my_proc.set_data_to_write(fmwk.data.kAssociation,"mcroi")
 
 my_proc.set_output_file("mcroi.root")
 

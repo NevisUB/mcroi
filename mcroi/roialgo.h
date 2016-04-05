@@ -23,7 +23,7 @@ namespace larlite {
     virtual ~roialgo(){}
 
     //takes generic data product -- NOT! send storage manage and producer
-    virtual bool FindROI(storage_manager* storage,std::string producer) = 0;
+    virtual bool FindROI(storage_manager* storage,std::string producer, std::vector<double> &vtx) = 0;
 
     inline void Clear() { vertex.resize(3); wirerange.resize(3); timerange.resize(3); }
 

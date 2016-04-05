@@ -12,7 +12,7 @@
 
 namespace larlite {
 
-  bool roiwire::FindROI(storage_manager* storage,std::string producer) {
+  bool roiwire::FindROI(storage_manager* storage,std::string producer, std::vector<double> &vtx) {
 
     auto event_w = storage->get_data<event_wire>( producer );
 
@@ -84,18 +84,30 @@ namespace larlite {
     auto event_shower = storage->get_data<event_mcshower>( "mcreco" );
 
     //Do the vertex
-    std::vector<double> vtx;
+
+    vtx  = {-1,-1,-1};
     
     for( const auto& s : *event_shower ) {
       
       if ( s.MotherPdgCode() != 111 ) continue; // this parents particle was not pizero
 
-      vtx = { s.Start().X(),s.Start().Y(),s.Start().Z() };
+      vtx  = {s.Start().X(), s.Start().Y(), s.Start().Z() };
       
       break; // found it, leave
       
     }
 
+    if ( (vtx[0] == -1) && (vtx[1] == -1) && (vtx[2] == -1) ){
+      std::cout << "No Pi0!" << std::endl;
+      return false;
+    }
+    
+    // if vertex out of FV -> return false
+    if ( (vtx[0] < 0) || (vtx[1] > 256) || (vtx[1] < -116) || (vtx[1] > 116) || (vtx[2] < 0) || (vtx[2]  > 1036) ){
+      std::cout << "Pi0 is out of FV" << std::endl;
+      return false;
+    }
+    
     for(short i=0;i<3;++i) {
       auto proj = _geoh->Get2DPointProjection( &vtx[0], i ); // pass as C array to return wire and time
       vertex[i] = { proj.w,proj.t - _toffset}; // - vic finds: 2255.
