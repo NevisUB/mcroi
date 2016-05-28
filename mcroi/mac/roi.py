@@ -22,18 +22,22 @@ my_proc.set_data_to_write(fmwk.data.kPiZeroROI,"mcroi")
 my_proc.set_data_to_write(fmwk.data.kVertex,"mcroi")
 my_proc.set_data_to_write(fmwk.data.kAssociation,"mcroi")
 
+my_proc.set_data_to_write(fmwk.data.kHit,"gaushit")
+my_proc.set_data_to_write(fmwk.data.kAssociation,"gaushit")
+
 my_proc.set_output_file("mcroi.root")
 
 mcroi = fmwk.MCROI()
 
 #type of roi you want
 
-roi = fmwk.roiwire()
-mcroi.SetProducer("caldata")
-roi.SetTickOffset(2255);
+#roi = fmwk.roiwire()
+#mcroi.SetProducer("caldata")
 
-# mcroi.SetProducer("gaushit")
-# roi = fmwk.roihit();
+
+mcroi.SetProducer("gaushit")
+roi = fmwk.roihit();
+roi.SetTickOffset(0);
 
 mcroi.SetROIAlgo(roi)
 

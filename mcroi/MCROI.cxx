@@ -12,7 +12,7 @@ namespace larlite {
 
     auto ev_roi  = storage->get_data<event_PiZeroROI>( "mcroi" );
     auto ev_vtx  = storage->get_data<event_vertex>   ( "mcroi" );
-    auto ev_ass     = storage->get_data<event_ass>      ( "mcroi" );
+    auto ev_ass  = storage->get_data<event_ass>      ( "mcroi" );
     std::vector<std::vector<unsigned int> > roi_vtx_ass_v;
 
     // turns out it is nontrival to pass std::vector<data_base> inheritor generically
@@ -21,22 +21,29 @@ namespace larlite {
 
     std::vector<double> xyz;
 
-    if ( ! _ralgo->FindROI(storage,_producer, xyz) ) // hard code producer :)
-      return false;
+    if ( ! _ralgo->FindROI(storage,_producer, xyz) ) return false;
     
     PiZeroROI proi(_ralgo->wirerange,_ralgo->timerange);
     proi.SetVertex(_ralgo->vertex);
+    proi.SetPiZeroROI(_ralgo->wirerange,_ralgo->timerange);
+
+    proi.SetTrackEnd(_ralgo->vertex);
     
     ev_roi->emplace_back(proi);
 
     std::cout << "found vertex : [" << xyz[0] << ", " << xyz[1] << ", " << xyz[2] << "]" << std::endl;
-    std::cout << std::endl;
 
     Double_t vtx_xyz[3];
     vtx_xyz[0] = xyz[0];
     vtx_xyz[1] = xyz[1];
     vtx_xyz[2] = xyz[2];
 
+    std::vector<float> vtxx = {(float)xyz[0],(float)xyz[1],(float)xyz[2]};
+    
+    proi.SetMuonVertex(vtxx);
+    proi.SetNeutrinoVertex(vtxx);
+    proi.SetCCIncVertex(vtxx);  
+    
     vertex vtx(vtx_xyz,0);
     
     ev_vtx->emplace_back(vtx);
@@ -55,3 +62,10 @@ namespace larlite {
 
 }
 #endif
+
+
+
+
+
+
+

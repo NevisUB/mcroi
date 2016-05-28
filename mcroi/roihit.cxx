@@ -87,15 +87,22 @@ namespace larlite {
     }
 
     // if vertex out of FV -> return false
-    if ( (vtx[0] < 0) || (vtx[1] > 256) || (vtx[1] < -116) || (vtx[1] > 116) || (vtx[2] < 0) || (vtx[2]  > 1036) ){
-      std::cout << "Pi0 is out of FV" << std::endl;
-      return false;
-    }
+    // if ( (vtx[0] < 0) || (vtx[1] > 256) || (vtx[1] < -116) || (vtx[1] > 116) || (vtx[2] < 0) || (vtx[2]  > 1036) ){
+    //   std::cout << "Pi0 is out of FV" << std::endl;
+    //   return false;
+    // }
 
 
     for(short i=0;i<3;++i) {
-      auto proj = _geoh->Get2DPointProjection( &vtx[0], i ); // pass as C array to return wire and time
-      vertex[i] = { proj.w,proj.t - _toffset}; // - vic finds: 2255.
+      auto proj = _geoh->Point_3Dto2D( &vtx[0], i );
+
+      // auto proj = _geoh->Get2DPointProjection( &vtx[0], i ); // pass as C array to return wire and time
+      
+      //vertex[i] = { proj.w / _geoh->WireToCm(),(proj.t - _toffset)/ _geoh->TimeToCm() + 3200}; //
+      vertex[i] = { (proj.t - _toffset)/ _geoh->TimeToCm() + 3200, proj.w / _geoh->WireToCm() }; //
+
+      //vertex[i] = { proj.w,proj.t - _toffset}; // - vic finds: 2255.
+      //vertex[i] = {proj.w, proj.t - _toffset + 3200}; // - vic finds: 2255.
     }
 
     //check that vertex is inside ROI, if not... bad ROI
